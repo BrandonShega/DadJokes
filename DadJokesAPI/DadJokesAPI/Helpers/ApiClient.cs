@@ -21,7 +21,7 @@ namespace DadJokesAPI.Helpers
 
         public async Task<T> Get<T>()
         {
-            var response = await Client.GetStringAsync(ApiUrl);
+            var response = await Client.GetAsync(ApiUrl);
             return JsonConvert.DeserializeObject<T>(response);
 		}
 
