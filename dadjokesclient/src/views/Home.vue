@@ -1,18 +1,47 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="joke">
+      {{ joke }}
+    </div>
+    <div class="new-joke-button">
+      <b-button variant="success" @click="getJoke()">Get a new Joke</b-button>
+    </div>
   </div>
 </template>
 
+<style scoped>
+.home {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+.new-joke-button {
+  margin-top: 20px;
+}
+</style>
+
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import request from 'request'
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      joke: ''
+    }
+  },
+  mounted () {
+    this.getJoke()
+  },
+  methods: {
+    getJoke () {
+      request('https://localhost:5001/api/jokes', (error, response, body) => {
+        if (error) console.log(error)
+        console.log(body)
+        const json = JSON.parse(body)
+        this.joke = json.joke
+      })
+    }
   }
 }
 </script>
