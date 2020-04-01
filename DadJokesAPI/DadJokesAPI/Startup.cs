@@ -36,6 +36,12 @@ namespace DadJokesAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            // Since this is an API open to all?
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:8080");
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
