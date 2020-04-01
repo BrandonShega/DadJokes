@@ -27,7 +27,7 @@ namespace DadJokesAPI.Controllers
             var highlightedResults = results.Select(joke =>
             {
                 var text = joke.Joke;
-                var replacedText = Regex.Replace(text, $"({query})", "<$1>");
+                var replacedText = Regex.Replace(text, $"({query})", "<$1>", RegexOptions.IgnoreCase);
                 return new DadJoke() { Id = joke.Id, Joke = replacedText };
             });
 
