@@ -10,6 +10,7 @@ namespace DadJokesAPI.Helpers
     public class ApiClient
     {
         private static readonly string ApiUrl = "https://www.icanhazdadjoke.com";
+        // Create only one instance of client per documentation
         private static readonly HttpClient Client = new HttpClient();
 
         public ApiClient()
@@ -21,7 +22,7 @@ namespace DadJokesAPI.Helpers
 
         public async Task<T> Get<T>()
         {
-            var response = await Client.GetAsync(ApiUrl);
+            var response = await Client.GetStringAsync(ApiUrl);
             return JsonConvert.DeserializeObject<T>(response);
 		}
 
@@ -30,6 +31,7 @@ namespace DadJokesAPI.Helpers
             var results = new List<T>();
             var page = 1;
 
+            // Make consecutive calls since we may not get 30 on the first page
             do
             {
 			    var searchUrl = ApiUrl + "/search";
@@ -43,6 +45,7 @@ namespace DadJokesAPI.Helpers
 			    }
 			    queryParams["page"] = $"{page}";
 
+                // Loop over each query pair and create query string
 			    foreach(KeyValuePair<string, string> entry in queryParams)
 			    {
 					queryArray.Add($"{entry.Key}={entry.Value}");
@@ -58,6 +61,7 @@ namespace DadJokesAPI.Helpers
                     results.AddRange(searchResult.Results.ToList());
 				}
 
+                // Exit in the case that we already have at least 30 results
                 if (results.Count() >= 30) 
 		        {
                     return results.Take(30).ToList();

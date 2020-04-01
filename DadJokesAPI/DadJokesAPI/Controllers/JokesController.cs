@@ -14,12 +14,14 @@ namespace DadJokesAPI.Controllers
     {
         private static readonly ApiClient apiClient = new ApiClient();
 
+        // /api/jokes
         [HttpGet]
         public async Task<DadJoke> GetJoke()
         {
             return await apiClient.Get<DadJoke>();
         }
 
+        // /api/jokes/:query
         [HttpGet("{query}")]
         public async Task<Dictionary<string, List<DadJoke>>> GetJoke(string query)
         {
@@ -31,15 +33,20 @@ namespace DadJokesAPI.Controllers
                 return new DadJoke() { Id = joke.Id, Joke = replacedText };
             });
 
+            // Get all short jokes
             var shortJokes = highlightedResults.Where(joke =>
             {
                 return joke.Joke.Split(" ").Length < 10;
             }).ToList();
+            
+            // Get all medium jokes
             var mediumJokes = highlightedResults.Where(joke =>
             {
                 var length = joke.Joke.Split(" ").Length;
                 return length >= 10 && length < 20;
             }).ToList();
+
+            // Get all long jokes
             var longJokes = highlightedResults.Where(joke =>
             {
                 return joke.Joke.Split(" ").Length >= 20;
